@@ -1,0 +1,65 @@
+Unity
+
+https://docs.unity3d.com/Manual/UNetSetup.html
+
+Multiplayer from Scratch
+
+
+vs code editor for c# scripts
+https://code.visualstudio.com/docs/?dv=win
+
+
+
+Test a Hosted Game
+Enter play mode in the editor by clicking the play button. You should see the NetworkManagerHUD default user interface:
+
+
+Press “Host” to start the game as the host of the game. [Button name is LAN Host??] This will cause a player object to be created, and the HUD will change to show the server is active. This game is running as a “host” - which is a server and a client in the same process.
+
+See Network Concepts.
+
+Pressing the arrow keys should make the player cube object move around.
+
+Exit play mode by pressing the stop button in the editor.
+
+Can't build exe to the Assets Folder, save it outside
+
+Both cubes currently move! This because the movement script is not network-aware.
+
+This function is only called on the local player on their client. This will make the user see their cube as red. The OnStartLocalPlayer function is a good place to do initialization that is only for the local player, such as configuring cameras and input.
+
+There are also other useful virtual functions on the NetworkBehaviour base class. See Spawning.
+
+Build and run the game
+The cube controlled by the local player should now be red, while the others are still white.
+
+
+Delete the bullet object from the scene
+Add a Rigidbody component to the bullet (Physics > Rigidbody)
+
+good stuff:
+
+// create the bullet object from the bullet prefab
+        var bullet = (GameObject)Instantiate(
+            bulletPrefab,
+            transform.position - transform.forward,
+            Quaternion.identity);
+
+        // make the bullet move away in front of the player
+        bullet.GetComponent<Rigidbody>().velocity = -transform.forward*4;
+        
+        // make bullet disappear after 2 seconds
+        Destroy(bullet, 2.0f);  
+
+
+Player State (Networked Health)
+Changes to health are being applied everywhere now - independently on the client and host. This allows health to look different for different players. Health should only be applied on the server and the changes replicated to clients. We call this “server authority” for health.
+
+In the NetworkIdentity click the “Server Only” checkbox. This makes the spawner not be sent to clients.
+
+Select the Enemy prefab
+Set the destroyOnDeath checkbox to true for the Enemy
+
+
+
+		
